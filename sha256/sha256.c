@@ -74,38 +74,78 @@ uint32_t sig1(uint32_t x) {
 	return ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10);
 }
 
-enum flag {READ, PAD0, PAD1, FINISH};
+enum flag {READ, PAD0, FINISH}; // PAD1 not needed
 
-uint64_t nozerobytes(uint64_t nobits) {
+int nextblock (union block *M, FILE *infile, uint64_t *nobits, enum flag *status) {
 
-	uint64_t result = 512ULL - (nobits % 512ULL);
-
-	if (result < 65)
-		result += 512;
-
-	result -= 72;
-
-	return (result / 8ULL);
-}
-
-int nextblock (union block ^M, FILE ^infile, uint64_t *nobits, enum flag *status) {
-
-	uint8_t i;
-
-	for (*nobits = 0, i = 0; fread(&M.eight[i], 1, 1, infile) == 1; *nobits += 8) {
-
-		printf("%02" PRIx8, M.eight[i]);
+	if (*status == FINISH) {
+		return 0;
 	}
 
-	printf("%02" PRIx8 " ", 0x80); // Bits: 1000 0000
+	/*if (*status == PAD1) {
 
-	for (uint64_t i = nozerobytes(*nobits); i > 0; i--) {
+		M->eight[0] = 0x80;
 
-		printf("%02" PRIx8 " ", 0x00);
+		for (int i = 1; i < 56; i++;) {
+			m->eight[i] = 0;
+		}
 
+		M->sixtyfour[7] = *nobit;
+
+		*status = FINISH;
+
+		return 1;
+	}*/
+
+	if (*status == PAD0) {
+
+		for (int i = 0; i < 56; i++) {
+
+			M->eight[i] = 0;
+		}
+
+		M->sixfour[7] = *nobits;
+
+		*status = FINISH;
+
+		return 1;
 	}
 
-	printf("%16" PRIx64 "\n", *nobits);
+	size_t nobytesread = fread(M->eight, 1, 64, infile);
+
+	if (nobytesread == 64) {
+
+		return 1;
+	}
+
+	// If we can fit all padding in last block do:
+	if (nobytesread < 56) {
+
+		M->eight[nobytesread] = 0x80;
+
+		for (int i = nobytesread + 1; i < 56; i++) {
+
+			M->eight[i] = 0;
+		}
+
+		M->sixfour[7] = *nobits;
+
+		*status = FINISH;
+
+		return 1;
+	}
+
+	// Otherwise we have read between 56 and 63 (inclusive) bytes
+	M->eight[nobytesread] = 0x80;
+	
+	for (int i = nobytesread + 1; i < 64; i++) {
+	
+		M->eight[i] = 0;
+
+		*status = PAD0;
+
+		return 1;
+	}
 
 }
 
@@ -122,7 +162,7 @@ void nexthash (union block *M, uint32_t *H) {
 	}
 
 	for (t = 16; t< 64; t++) {
-		W[t] = sigl(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
+		W[t] = sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
 	}
 
 	a = H[0]; b = H[1]; c = H[2]; d = H[3]; e = H[4]; f = H[5]; g = H[6]; h = H[7];
@@ -180,9 +220,9 @@ int main(int argc, char *argv[]) {
 	enum flag status = READ;
 
 	// Read through all of the padded message blocks
-	while (nextBlock(&M, infile, nobits, status)) {
+	while (nextblock(&M, infile, &nobits, &status)) {
 		// Calculate the next hash value
-		nexthash(&M, &H);
+		nexthash(&M, H);
 	}
 
 	for (int i; i < 8; i++) {
