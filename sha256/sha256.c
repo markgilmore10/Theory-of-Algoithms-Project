@@ -3,7 +3,7 @@
 // The Secure Hash Algorithm 256-bit version
 
 #include <stdio.h>
-//#include <endian.h>
+#include <endian.h>
 #include <inttypes.h>
 
 // Section 2.1
