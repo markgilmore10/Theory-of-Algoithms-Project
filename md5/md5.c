@@ -6,7 +6,7 @@
 #define WORD uint32_t
 
 const WORD K[] = {
-	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+	  0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
     0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
@@ -23,6 +23,34 @@ const WORD K[] = {
     0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
+
+#define ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
+
+#define F(x, y, z) (((x) & (y)) | ((~x) & (z)))
+#define G(x, y, z) (((x) & (z)) | ((y) & (~z)))
+#define H(x, y, z) ((x) ^ (y) ^ (z))
+#define I(x, y, z) ((y) ^ ((x) | (~z)))
+
+#define FF(a,b,c,d,x,s,ac) { \
+  a += F(b,c,d) + x + ac; \
+  a = b + ROTATE_LEFT(a,s); \
+}
+
+#define GG(a,b,c,d,x,s,ac) { \
+  a += G(b,c,d) + x + ac; \
+  a = b + ROTATE_LEFT(a,s); \
+}
+
+#define HH(a,b,c,d,x,s,ac) { \
+  a += H(b,c,d) + x + ac; \
+  a = b + ROTATE_LEFT(a,s); \
+}
+
+#define II(a,b,c,d,x,s,ac) { \
+  a += I(b,c,d) + x + ac; \
+  a = b + ROTATE_LEFT(a,s); \
+}
+
 
 int main() {
     // Expect and open a single filename
