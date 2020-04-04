@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
-#include <string.h>
 #include <byteswap.h>
 
 #define WORD uint32_t
 #define BYTE uint8_t
 
 const WORD K[] = {
-	  0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+    0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
     0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
@@ -204,7 +203,7 @@ int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
   
             M->eight[nobytesread] = 0x80;
 
-            for (int i = nobytesread + 1; i < 64; i++) {
+            for (i = nobytesread + 1; i < 64; i++) {
                 M->eight[i] = 0x00;
             }
             *status = PAD0;
@@ -235,23 +234,26 @@ int main(int argc, char *argv[]) {
 
   PADFLAG  status = READ;
 
-  WORD H[] = {0x67452301, 
-	      0xefcdab89, 
-	      0x98badcfe, 
-	      0x10325476};
+  WORD H[] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
-  md5Transform(&M, H);
+  while (nextblock(&M, infile, &nobits, &status)) {
+   md5Transform(&M, H);
+  }
 
   printf("\n Hash: ");
 
   for (int i = 0; i < 4; i++)
   {
-    printf("%08" PRIx32 "", H[i]);
+    // https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func
+    printf("%08" PRIx32 "", bswap_32(H[i]));
   }
 
   printf("\n");
+ 
 
   fclose(infile);
+
+  return 0;
 
 }
 
