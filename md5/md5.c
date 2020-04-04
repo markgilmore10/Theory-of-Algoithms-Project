@@ -1,7 +1,8 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <string.h>
+#include <byteswap.h>
 
 #define WORD uint32_t
 #define BYTE uint8_t
@@ -71,7 +72,7 @@ const WORD K[] = {
 
 typedef union {
   uint64_t sixfour[8];
-  uint32_t threetwo[16];
+  WORD threetwo[16];
   uint8_t eight[64];
 } BLOCK;
 
@@ -81,10 +82,9 @@ typedef enum {
   FINISH
 } PADFLAG;
 
-void md5Transform(BLOCK *M, uint8_t *state) {
+void md5Transform(BLOCK *M, WORD *H) {
 
-  UINT4 state[4];
-  UINT4 a = state[0], b = state[1], c = state[2], d = state[3];
+  WORD a = H[0], b = H[1], c = H[2], d = H[3];
 
   /* Round 1 */
   FF (a, b, c, d, M->threetwo[ 0], S11, K[ 0]); /* 1  */
@@ -157,10 +157,10 @@ void md5Transform(BLOCK *M, uint8_t *state) {
   II (c, d, a, b, M->threetwo[ 2], S43, K[62]); /* 63 */
   II (b, c, d, a, M->threetwo[ 9], S44, K[63]); /* 64 */
 
-  state[0] += a;
-  state[1] += b;
-  state[2] += c;
-  state[3] += d;
+  H[0] += a;
+  H[1] += b;
+  H[2] += c;
+  H[3] += d;
 
 }
 
@@ -199,6 +199,7 @@ int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
             M->sixfour[7] = *nobits;
 
             *status = FINISH;
+	    return 1;
           } else if (nobytesread < 64) {
   
             M->eight[nobytesread] = 0x80;
@@ -211,13 +212,13 @@ int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
     }
 
       return 1;
+
 }
 
+int main(int argc, char *argv[]) {
 
-int main() {
-    // Expect and open a single filename
   if (argc != 2) {
-    printf("Error: Single filename as argument expected.\n");
+    printf("Error: expected single filename as argument.\n");
     return 1;
   }
 
@@ -228,7 +229,31 @@ int main() {
     return 1;
   }
 
+  BLOCK M;
+
+  uint64_t nobits = 0;
+
+  PADFLAG  status = READ;
+
+  WORD H[] = {0x67452301, 
+	      0xefcdab89, 
+	      0x98badcfe, 
+	      0x10325476};
+
+  md5Transform(&M, H);
+
+  printf("\n Hash: ");
+
+  for (int i = 0; i < 4; i++)
+  {
+    printf("%08" PRIx32 "", H[i]);
+  }
+
+  printf("\n");
+
   fclose(infile);
 
-  return 0;
 }
+
+
+
