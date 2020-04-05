@@ -86,7 +86,7 @@ void md5Transform(BLOCK *M, WORD *H) {
   WORD a = H[0], b = H[1], c = H[2], d = H[3];
 
   /* Round 1 */
-  FF (a, b, c, d, M->threetwo[ 0], S11, K[ 0]); /* 1  */
+  FF( a, b, c, d, M->threetwo[ 0], S11, K[ 0]); /* 1  */
   FF (d, a, b, c, M->threetwo[ 1], S12, K[ 1]); /* 2  */
   FF (c, d, a, b, M->threetwo[ 2], S13, K[ 2]); /* 3  */
   FF (b, c, d, a, M->threetwo[ 3], S14, K[ 3]); /* 4  */
@@ -174,7 +174,7 @@ int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
         return 0;
       case PAD0:
 
-        for (int i = 0; i < 56; i++) {
+        for (i = 0; i < 56; i++) {
             M->eight[i] = 0x00;
         }
 
