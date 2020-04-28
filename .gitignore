@@ -4,10 +4,9 @@ sha256
 unions
 lookatbits
 refactor
-md5
-a
-md5
-
+md5.exe
+a.exe
+test.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
-//#include <byteswap.h>
 
 #define WORD uint32_t
 #define BYTE uint8_t
@@ -243,64 +242,4 @@ void process(FILE *infile) {
 
   printf("\n");
 
-}
-
-int main(int argc, char *argv[]) {
-    int choice;
-    char input[100];
-    char fileName[100];
-
-    printf("\n=================================================================\n");
-    printf("\n---------------------- Theory of Algorithms ---------------------\n");
-    printf("\n--------------------- MD5 Hashing Algorithm ---------------------\n");
-    printf("\n-------------------------- Mark Gilmore -------------------------\n");
-    printf("\n--------------------------- G00214777 ---------------------------\n");
-    printf("\n=================================================================\n");
-  
-    do {
-        printf("\nChoose 1 to hash a file");
-        printf("\nChoose 2 to input a string to hash");
-        printf("\nChoose 0 to exit\n");
-	scanf("%d", &choice);
-
-        if (choice == 1) {
-            printf("Please enter the name of your file: ");
-	          scanf("%s", fileName);
-
-            FILE *infile = fopen(fileName, "rb");
-
-            if (!infile) {
-                printf("Error: couldn't open file %s.\n", argv[1]);
-                return 1;
-            } else {
-                printf("\nHashing file...\n");
-                process(infile);
-                fclose(infile);
-
-            }
-
-        } else if (choice == 2) {
-            printf("Input a string to hash: ");
-            scanf("%s", input);
-
-            FILE *file = fopen("userinput.txt", "w");
-            fprintf(file, "%s", input);
-            fclose(file);
-
-            FILE *infile = fopen("userinput.txt", "rb");
-            
-            printf("\nHashing file...\n");
-            process(infile);
-            fclose(infile);
-
-        } else if (choice == 0) {
-
-	    printf("\nExiting...\n");
-
-	}else {
-            printf("\nInvalid Input. Please try again...\n");
-        }
-    } while (choice != 0);
-
-    return 0;
 }
