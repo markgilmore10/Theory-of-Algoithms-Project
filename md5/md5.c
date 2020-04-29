@@ -232,7 +232,8 @@ void process(FILE *infile) {
    md5Transform(&M, H);
   }
 
-  printf("\n Hash: ");
+  printf("\n====================================\n");
+  printf("\nHash: ");
 
   for (int i = 0; i < 4; i++)
   {

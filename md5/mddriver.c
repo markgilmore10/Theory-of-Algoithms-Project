@@ -1,21 +1,56 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 #include "md5.c"
+#include "commands.c"
 
-void helpme() {
-    printf("\n--run or -r      | Intructions on how to run the program\n");
-    printf("\n--version or -v  | The version of the program\n");
-    printf("\n--author or -A   | The author of the program\n");
-    printf("\n--test or -t     | Test suite to test the accuracy of the hashing algorithm\n");
-    printf("\n--about or -a    | About the project\n");
-    printf("\n--md or -m       | About the algorithm and the differences between the MD4 and MD5 hashing algorithms\n");
+void MDTestSuite ()
+{
+
+    int bufferLength = 100;
+    char* buffer = malloc(bufferLength);
+    char c;
+    clock_t t;
+    double time_taken;
+
+    printf ("\nMD5 test suite:\n");
+    printf("\nExpected Results\n");
+
+    FILE *file = fopen("testexpect.txt", "r");
+    c = fgetc(file);
+    while (c != EOF) {
+          printf("%c", c);
+          c = fgetc(file);
+    }
+    fclose(file);
+    printf("\nActual Results\n");
+    FILE *file4 = fopen("testsuite.txt", "r");
+    while(fgets(buffer, bufferLength, file)) {
+      buffer[strcspn(buffer, "\n")] = 0;
+      FILE *file2 = fopen("test.txt", "w");
+      fprintf(file2, "%s", buffer);
+      fclose(file2);
+      FILE *file3 = fopen("test.txt", "r");
+
+      t = clock();
+      process(file3);
+      t = clock() -t;
+
+      time_taken = ((double)t)/CLOCKS_PER_SEC;
+      printf ("\nTime Taken: %.2fms\n", (time_taken * 1000));
+      printf("\n====================================\n");
+      fclose(file3);  
+    }
+  
+    fclose(file);
+
 }
-
 
 int main(int argc, char *argv[]) {
   char choice[20];
-  char input[100];
+  char input[1000];
   char fileName[100];
 
   printf("\n=================================================================\n");
@@ -44,43 +79,49 @@ int main(int argc, char *argv[]) {
                 printf("\nHashing file...\n");
                 process(infile);
                 fclose(infile);
-
             }
 
         } else if (strcmp(choice, "2") == 0) {
             printf("Input a string to hash: ");
-            scanf("%s", input);
+            fgets(input, sizeof(input), stdin);
 
             FILE *file = fopen("userinput.txt", "w");
+  
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = 0;
+
             fprintf(file, "%s", input);
             fclose(file);
 
-            FILE *infile = fopen("userinput.txt", "rb");
+            FILE *infile = fopen("userinput.txt", "r");
             
             printf("\nHashing Input...\n");
             process(infile);
             fclose(infile);
 
       } else if (strcmp(choice, "--help") == 0 || strcmp(choice, "-h") == 0) {
-            helpme();
+            help();
 
       } else if (strcmp(choice, "--run") == 0 || strcmp(choice, "-r") == 0) {
-            printf("\n--run or -r      | Intructions on how to run the program\n");
+            run();
 
       } else if (strcmp(choice, "--version") == 0 || strcmp(choice, "-v") == 0) {
-            printf("\n--version or -v  | The version of the program\n");
+            version();
 
       } else if (strcmp(choice, "--author") == 0 || strcmp(choice, "-A") == 0) {
-            printf("\n--author or -A   | The author of the program\n");
+            author();
 
       } else if (strcmp(choice, "--test") == 0 || strcmp(choice, "-t") == 0) {
-            printf("\n--test or -t     | Test suite to test the accuracy of the hashing algorithm\n");
+            MDTestSuite();
 
       } else if (strcmp(choice, "--about") == 0 || strcmp(choice, "-a") == 0) {
-            printf("\n--about or -a    | About the project\n");
+            about();
 
       } else if (strcmp(choice, "--md") == 0 || strcmp(choice, "-m") == 0) {
-            printf("\n--md or -m       | About the algorithm and the differences between the MD4 and MD5 hashing algorithms\n");
+            md();
+
+      } else if (strcmp(choice, "0") == 0) {
+          printf("\nExiting...\n");
 
       } else {
           printf("\nInvalid Input. Please try --help or -h for a list of executable commands...\n");

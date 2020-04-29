@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <endian.h>
 #include <inttypes.h>
+#include <byteswap.h>
+
 
 // Section 2.1
 #define WORD uint32_t
