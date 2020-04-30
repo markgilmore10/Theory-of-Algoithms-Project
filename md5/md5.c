@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+// As specified 
 #define WORD uint32_t
 #define BYTE uint8_t
 
+// Constants used in the MD5 transformation
 const WORD K[] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -24,6 +26,7 @@ const WORD K[] = {
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
+// Constants for MD5Transform routine
 #define S11 7
 #define S12 12
 #define S13 17
@@ -41,13 +44,17 @@ const WORD K[] = {
 #define S43 15
 #define S44 21
 
+// ROTATE_LEFT rotates x left n bits
 #define ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
 
+// F, G, H and I are the four auxiliary functions
 #define F(x, y, z) (((x) & (y)) | ((~x) & (z)))
 #define G(x, y, z) (((x) & (z)) | ((y) & (~z)))
 #define H(x, y, z) ((x) ^ (y) ^ (z))
 #define I(x, y, z) ((y) ^ ((x) | (~z)))
 
+// FF, GG, HH, and II transformations for rounds 1, 2, 3, and 4.
+// Rotation is separate from addition to prevent recomputation.
 #define FF(a,b,c,d,x,s,ac) { \
   a += F(b,c,d) + x + ac; \
   a = b + ROTATE_LEFT(a,s); \
@@ -68,20 +75,25 @@ const WORD K[] = {
   a = b + ROTATE_LEFT(a,s); \
 }
 
+// 32 bit endian conversion
+// https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func
 #define SWAP_UINT32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) | (((x) & 0x0000FF00) << 8) | ((x) << 24))
 
+// A sixty-four byte block of memory, accessed with different types.
 typedef union {
   uint64_t sixfour[8];
   WORD threetwo[16];
   uint8_t eight[64];
 } BLOCK;
 
+// Enum to keep track of where we are in the message padding process.
 typedef enum {
   READ, 
   PAD0, 
   FINISH
 } PADFLAG;
 
+// MD5 basic transformation. Transforms state based on block.
 void md5Transform(BLOCK *M, WORD *H) {
 
   WORD a = H[0];
@@ -167,13 +179,15 @@ void md5Transform(BLOCK *M, WORD *H) {
 
 }
 
+// Padding the message
+// Code provided via online videos from lecturer with minor adjustments
 int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
 
   int i;
   size_t nobytesread;
 
     switch(*status) {
-
+	  // If the process is finished, return
       case FINISH:
         return 0;
       case PAD0:
@@ -218,6 +232,7 @@ int nextblock(BLOCK *M, FILE *infile, uint64_t *nobits, PADFLAG *status) {
 
 }
 
+// Takes in a file, hashes it and prints out the result
 void process(FILE *infile) {
 
   BLOCK M;
@@ -225,7 +240,7 @@ void process(FILE *infile) {
   uint64_t nobits = 0;
 
   PADFLAG  status = READ;
-
+  // Initialize H
   WORD H[] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
   while (nextblock(&M, infile, &nobits, &status)) {

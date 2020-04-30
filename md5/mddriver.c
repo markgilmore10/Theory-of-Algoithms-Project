@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "md5.c"
 #include "commands.c"
-
+// Runs a test suite through the hash and prints out the results along with the time taken to hash each input
 void MDTestSuite ()
 {
 
@@ -48,6 +48,7 @@ void MDTestSuite ()
 
 }
 
+// Main method. Displays the main menu
 int main(int argc, char *argv[]) {
   char choice[20];
   char input[1000];

@@ -1,16 +1,18 @@
 #include <stdio.h>
 
+// All options to display details to the screen
+
 void help() {
-      printf("\n|------------------------------------------------------------------------------------------------------|\n");
-      printf("\n| Command          | Process                                                                           |\n");
-      printf("\n|------------------------------------------------------------------------------------------------------|\n");
-      printf("\n| --run or -r      | Intructions on how to run the program                                             |\n");
-      printf("\n| --version or -v  | The version of the program                                                        |\n");
-      printf("\n| --author or -A   | The author of the program                                                         |\n");
-      printf("\n| --test or -t     | Test suite to test the accuracy of the hashing algorithm                          |\n");
-      printf("\n| --about or -a    | About the project                                                                 |\n");
-      printf("\n| --md or -m       | About the algorithm and the differences between the MD4 and MD5 hashing algorithms|\n");
-      printf("\n|------------------------------------------------------------------------------------------------------|\n");
+      printf("\n|------------------------------------------------------------------------------------------------------------------------|\n");
+      printf("\n| Command          | Process                                                                                             |\n");
+      printf("\n|------------------------------------------------------------------------------------------------------------------------|\n");
+      printf("\n| --run or -r      | Displays intructions on how to run the program                                                      |\n");
+      printf("\n| --version or -v  | Displays the version of the program                                                                 |\n");
+      printf("\n| --author or -A   | Displays the author of the program                                                                  |\n");
+      printf("\n| --test or -t     | Test suite to test the accuracy and run time of the hashing algorithm                               |\n");
+      printf("\n| --about or -a    | Displays details about the project                                                                  |\n");
+      printf("\n| --md or -m       | Displays details about the algorithm and the differences between the MD4 and MD5 hashing algorithms |\n");
+      printf("\n|------------------------------------------------------------------------------------------------------------------------|\n");
 }
 
 void run() {
