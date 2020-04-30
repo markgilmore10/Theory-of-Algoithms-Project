@@ -69,7 +69,9 @@ d174ab98d277d9f5a5611c2c9f419d9f
 "**123456789012345678901234567890123456789012345678901234567890123456
 78901234567890**" = 57edf4a22be3c955ac49da2e2107b67a  
   
-As you can see from the image[1] each output matches up with the expected output therefore every test passes.  
+  ![Results](https://github.com/markgilmore10/Theory-of-Algoithms-Project/blob/master/images/Results.JPG)
+  
+As you can see from the image above each output matches up with the expected output therefore every test passes.  
 
 The test function is also timed using the time.h library. The timer starts as the argument enters process() and stops when it comes out of it. The end time is then subtracted from the start time and divided by CLOCKS_PER_SEC (1,000,000) to get the time in seconds. The result is then multiplied by 1000 and displayed in milliseconds.  
 
@@ -199,6 +201,9 @@ The Message Digest then yields an output A, B, C, D.
 Beginning with the lower byte of A and ending with the higher byte of D.
   
 ### Visual
+  
+  ![MD5](https://github.com/markgilmore10/Theory-of-Algoithms-Project/blob/master/images/MD5.JPG)
+  
 The image above shows the processing of the F block. The same process is used for all four of the auxiliary functions (F, G, H, I).  
 The four buffers (A, B, C, D) are mixed with the input using the four auxiliary functions.  
 In the image the M is the 16, 32 bit, words that the message has been divided into after the padding (M0-M15).  
@@ -221,3 +226,18 @@ As a result, it is statistically correct to imply that SHA-256, which is also fo
 In its preceding test, the use of collisions was found to be a viable way of corrupting the effectiveness of the algorithm. This meant the algorithm was insecure and could be reversed engineered (Margaret Rouse, 2020). MD5, however, didn't lose all its functionality by retaining its checksum function. Since the algorithm is characterized by a theoretical case where two different inputs can produce a similar output, it is inevitably challenging to point out that reverse engineering is accurate. The algorithm to reverse MD5 has, therefore, to be complex and developed over time addressing the impeding theoretical cases while providing practice case studies.  
 
 ## References
+The following references allowed me to gain a greater understanding and build my knowledge of the MD5. These papers allowed me to understand what exactly I was building and how I could implement it:  
+  
+[1] R. Rivest. (April 1992). The MD5 Message-Digest Algorithm: https://www.ietf.org/rfc/rfc1321.txt  
+[2] Shweta Mishra Shikha Mishra, Nilesh Kumar. (September 2013). Hashing Algorithm: MD5  
+[3] Danstools00. (2020, April 30). MD5 Generator. https://www.md5hashgenerator.com/  
+[4] Cook, J. D. (2019, January 24). Reversing an MD5 hash. https://www.johndcook.com/blog/2019/01/24/reversing-an-md5-hash/  
+[5] Margaret Rouse . (2020, April 30). MD5. https://www.searchsecurity.techtarget.com/definition/MD5/  
+
+While not directly referenced the following papers on algorithms offered great insight to the algorithm and hashing functions in general. These papers allowed me to understand what exactly was building and how it worked:  
+  
+Md. Alam Hossain, Md.Kamrul Islam, Subrata Kumar Dasand Md. Asif Nashiry.(March, 2012). CRYPTANALYZING OF MESSAGE DIGEST ALGORITHMS MD4 AND MD5 https://www.academia.edu/10358185/CRYPTANALYZING_OF_MESSAGE_DIGEST_ALGORITHMS_MD4_AND_MD5  
+  
+Rashmi P. Sarode, Piyush Gupta and Neeraj Manglani. (2014). A comparative analysis of RSA and MD5 algorithms. https://www.academia.edu/7231024/A_Comparative_Analysis_of_RSA_and_MD5_Algorithms
+
+
