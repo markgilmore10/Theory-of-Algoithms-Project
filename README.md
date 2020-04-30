@@ -9,7 +9,7 @@
 | **Course** | BSc (Hons) in Software Development
 | **Module** |  Theory of Algorithms |
 
-This Repository contains the submission for my 4th year Theory of Algorithms project as part of my BSc (Hons) in Software Development course. A full rundown of the program and how it works can be found in the overview.md(https://github.com/markgilmore10/Theory-of-Algoithms-Project/blob/master/overview.md) file
+This Repository contains the submission for my 4th year Theory of Algorithms project as part of my BSc (Hons) in Software Development course. A full rundown of the program and how it works can be found in the [overview.md](https://github.com/markgilmore10/Theory-of-Algoithms-Project/blob/master/overview.md) file
 
 <hr>
 
